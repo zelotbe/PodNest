@@ -1,9 +1,9 @@
 <script setup>
-import TheWelcome from "@/components/TheWelcome.vue";
+import Solid from "@/components/Solid.vue";
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <Solid />
   </main>
 </template>
