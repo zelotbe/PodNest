@@ -1,4 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
+
+import store from "../store";
+
 import HomeView from "../views/HomeView.vue";
 
 const router = createRouter({
@@ -8,16 +11,32 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      meta: { hiddenAfterAuth: true, title: "PodNest" },
     },
-    // {
-    //   path: "/about",
-    //   name: "about",
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import("../views/AboutView.vue"),
-    // },
+    {
+      path: "/dashboard",
+      name: "dashboard",
+      component: () => import("../views/DashboardView.vue"),
+      meta: { requiresAuth: true, title: "Dashboard" },
+    },
   ],
+});
+
+router.beforeEach(async (to, from, next) => {
+  if (to.meta.requiresAuth && !store.getters["auth/loggedIn"]) {
+    next({ path: "/" });
+    return;
+  }
+
+  if (to.meta.hiddenAfterAuth && store.getters["auth/loggedIn"]) {
+    next({ path: "/dashboard" });
+    return;
+  }
+  next();
+});
+
+router.afterEach((to) => {
+  document.title = to.meta.title;
 });
 
 export default router;
