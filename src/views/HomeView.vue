@@ -1,10 +1,21 @@
-<script setup>
-import Solid from "@/components/Solid.vue";
+<script>
+import { login } from "@inrupt/solid-client-authn-browser";
+
+export default {
+  methods: {
+    loginToProvider() {
+      return login({
+        oidcIssuer: "https://solidcommunity.net",
+        redirectUrl: window.location.href,
+        clientName: "PodNest",
+      });
+    },
+  },
+};
 </script>
 
 <template>
   <main>
-    <h1 class="text-3xl font-bold underline">Test</h1>
-    <Solid />
+    <button @click="loginToProvider()">Login</button>
   </main>
 </template>

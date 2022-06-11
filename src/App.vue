@@ -1,11 +1,55 @@
 <script>
 import { mapGetters } from "vuex";
+import {
+  handleIncomingRedirect,
+  getDefaultSession,
+} from "@inrupt/solid-client-authn-browser";
 
 export default {
   computed: {
     ...mapGetters({
       loggedIn: "auth/loggedIn",
     }),
+  },
+  methods: {
+    setUser(bool, webID) {
+      this.$store.dispatch("auth/setLoggedIn", bool);
+      this.$store.dispatch("auth/setWebID", webID);
+    },
+    async getLocalStorage() {
+      const session = getDefaultSession();
+      if (session.info.isLoggedIn) {
+        if (
+          !localStorage.getItem("isLoggedIn") &&
+          !localStorage.getItem("webID")
+        ) {
+          localStorage.setItem("isLoggedIn", JSON.stringify(true));
+          localStorage.setItem("webID", JSON.stringify(session.info.webId));
+
+          this.setUser(
+            JSON.parse(localStorage.getItem("isLoggedIn")),
+            JSON.parse(localStorage.getItem("webID"))
+          );
+        }
+      } else if (
+        localStorage.getItem("isLoggedIn") &&
+        localStorage.getItem("webID")
+      ) {
+        this.setUser(
+          JSON.parse(localStorage.getItem("isLoggedIn")),
+          JSON.parse(localStorage.getItem("webID"))
+        );
+      }
+    },
+  },
+  async mounted() {
+    async function handleRedirectAfterLogin() {
+      await handleIncomingRedirect();
+    }
+    console.log("handling....");
+    await handleRedirectAfterLogin();
+    console.log("getting localstorage");
+    await this.getLocalStorage();
   },
 };
 </script>
