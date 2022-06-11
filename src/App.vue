@@ -3,12 +3,14 @@ import { mapGetters } from "vuex";
 import {
   handleIncomingRedirect,
   getDefaultSession,
+  logout,
 } from "@inrupt/solid-client-authn-browser";
 
 export default {
   computed: {
     ...mapGetters({
       loggedIn: "auth/loggedIn",
+      name: "pod/name",
     }),
   },
   methods: {
@@ -41,6 +43,11 @@ export default {
         );
       }
     },
+    logoutUser() {
+      logout();
+      window.localStorage.clear();
+      this.$router.push("/");
+    },
   },
   async mounted() {
     async function handleRedirectAfterLogin() {
@@ -50,6 +57,7 @@ export default {
     await handleRedirectAfterLogin();
     console.log("getting localstorage");
     await this.getLocalStorage();
+    this.$router.push("/dashboard");
   },
 };
 </script>
@@ -57,15 +65,18 @@ export default {
 <template>
   <header>
     <div class="flex">
-      <h1 class="text-5xl font-mono">PodNest</h1>
+      <h1 class="text-5xl font-mono">
+        PodNest <span v-if="name !== ''">- {{ name }}</span>
+      </h1>
       <div class="flex-auto w-64"></div>
       <nav class="flex sm:justify-center">
-        <RouterLink
-          class="rounded-lg px-3 py-2 text-slate-700 font-medium hover:bg-slate-100 hover:text-slate-900"
-          to="/"
+        <button
           v-show="loggedIn"
-          >Logout</RouterLink
+          @click="logoutUser"
+          class="rounded px-3 py-2 text-slate-700 font-medium bg-rose-700 text-neutral-50 hover:text-slate-900 hover:text-black hover:bg-transparent hover:underline hover:decoration-rose-700"
         >
+          Logout
+        </button>
       </nav>
       <div class="flex w-10"></div>
     </div>
