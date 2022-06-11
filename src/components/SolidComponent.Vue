@@ -1,31 +1,9 @@
 <script>
-// Import from "@inrupt/solid-client-authn-browser"
 import {
   login,
   handleIncomingRedirect,
   getDefaultSession,
-  fetch,
-  logout,
 } from "@inrupt/solid-client-authn-browser";
-
-// Import from "@inrupt/solid-client"
-import {
-  addUrl,
-  addStringNoLocale,
-  createSolidDataset,
-  createThing,
-  getPodUrlAll,
-  getSolidDataset,
-  getThing,
-  getThingAll,
-  getStringNoLocale,
-  removeThing,
-  saveSolidDatasetAt,
-  setThing,
-  getContainedResourceUrlAll,
-} from "@inrupt/solid-client";
-
-import { VCARD, RDF, AS, SCHEMA_INRUPT, FOAF } from "@inrupt/vocab-common-rdf";
 
 export default {
   methods: {
@@ -33,56 +11,34 @@ export default {
       return login({
         oidcIssuer: "https://solidcommunity.net",
         redirectUrl: window.location.href,
-        clientName: "Workshop Solid",
+        clientName: "PodNest",
       });
     },
+    setUser(bool, webID) {
+      this.$store.dispatch("auth/setLoggedIn", bool);
+      this.$store.dispatch("auth/setWebID", webID);
+    },
+    async getLocalStorage() {
+      const session = getDefaultSession();
+      if (session.info.isLoggedIn) {
+        return this.setUser(true, session.info.webId);
+      } else {
+        return this.setUser(false, "");
+      }
+    },
   },
-  setUser(bool, webID) {
-    this.$store.dispatch("auth/setLoggedIn", true);
-    this.$store.dispatch("auth/setWebID", webID);
-  },
-  async getLocalStorage() {
-    const session = getDefaultSession();
-    if (session) {
-      return this.setUser(true, session.info.webId);
-    } else {
-      return this.setUser(false, "");
-    }
-  },
-  mounted() {
+  async mounted() {
     async function handleRedirectAfterLogin() {
       await handleIncomingRedirect();
-
-      this.getLocalStorage();
     }
-    handleRedirectAfterLogin();
+    await handleRedirectAfterLogin();
+    await this.getLocalStorage();
   },
 };
-
-// function loginToProvider() {
-//   return login({
-//     oidcIssuer: "https://solidcommunity.net",
-//     redirectUrl: window.location.href,
-//     clientName: "Workshop Solid",
-//   });
-// }
-
-//AFTER LOGIN -> READ DATA
-// async function handleRedirectAfterLogin() {
-//   const session = getDefaultSession();
-//   await handleIncomingRedirect();
-
-//   if (session.info.isLoggedIn) {
-//     store.dispatch("auth/setLoggedIn", true);
-//   }
-// }
 </script>
 
 <template>
-  <div class="greetings">
-    <h1 class="green" v-if="loggedIn">hai</h1>
-    <button @click="loginToProvider()">Login</button>
-  </div>
+  <div><button @click="loginToProvider()">Login</button></div>
 </template>
 
 <style scoped>
