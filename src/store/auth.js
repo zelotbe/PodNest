@@ -33,5 +33,8 @@ export default {
     setLoggedIn({ commit }, bool) {
       commit("SET_LOGGEDIN", bool);
     },
+    setWebID({ commit }, url) {
+      commit("SET_WEBID", url);
+    },
   },
 };
