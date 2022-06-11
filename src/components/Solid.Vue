@@ -1,4 +1,6 @@
 <script setup>
+//VUEX
+import { useStore } from "vuex";
 // Import from "@inrupt/solid-client-authn-browser"
 import {
   login,
@@ -27,6 +29,8 @@ import {
 
 import { VCARD, RDF, AS, SCHEMA_INRUPT, FOAF } from "@inrupt/vocab-common-rdf";
 
+const store = useStore();
+
 function loginToProvider() {
   return login({
     oidcIssuer: "https://solidcommunity.net",
@@ -41,7 +45,7 @@ async function handleRedirectAfterLogin() {
   await handleIncomingRedirect();
 
   if (session.info.isLoggedIn) {
-    this.$store.dispatch("auth/setLoggedIn", true);
+    store.dispatch("auth/setLoggedIn", true);
   }
 }
 handleRedirectAfterLogin();
