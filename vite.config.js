@@ -8,6 +8,7 @@ export default defineConfig({
   plugins: [vue()],
   define: {
     global: {},
+    __VUE_PROD_DEVTOOLS__: true,
   },
   resolve: {
     alias: {
