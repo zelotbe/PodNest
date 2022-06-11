@@ -35,8 +35,8 @@ router.beforeEach(async (to, from, next) => {
     return;
   }
 
-  if (to.meta.requiresAuth && store.getters["auth/loggedIn"]) {
-    next();
+  if (to.meta.requiresAuth && !JSON.parse(localStorage.getItem("isLoggedIn"))) {
+    next({ path: "/" });
     return;
   }
 
