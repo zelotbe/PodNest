@@ -11,7 +11,7 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
-      meta: { hiddenAfterAuth: true, title: "PodNest" },
+      meta: { requiresAuth: false, hiddenAfterAuth: true, title: "PodNest" },
     },
     {
       path: "/dashboard",
@@ -19,19 +19,27 @@ const router = createRouter({
       component: () => import("../views/DashboardView.vue"),
       meta: { requiresAuth: true, title: "Dashboard" },
     },
+    {
+      path: "/:pathMatch(.*)",
+      redirect: "/",
+    },
   ],
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.meta.requiresAuth && !store.getters["auth/loggedIn"]) {
-    next({ path: "/" });
-    return;
-  }
-
-  if (to.meta.hiddenAfterAuth && store.getters["auth/loggedIn"]) {
+  if (
+    to.meta.hiddenAfterAuth &&
+    JSON.parse(localStorage.getItem("isLoggedIn"))
+  ) {
     next({ path: "/dashboard" });
     return;
   }
+
+  if (to.meta.requiresAuth && store.getters["auth/loggedIn"]) {
+    next();
+    return;
+  }
+
   next();
 });
 
