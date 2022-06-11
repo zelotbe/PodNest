@@ -27,7 +27,7 @@ import {
 
 import { VCARD, RDF, AS, SCHEMA_INRUPT, FOAF } from "@inrupt/vocab-common-rdf";
 
-function loginToSelectedIdP() {
+function loginToProvider() {
   return login({
     oidcIssuer: "https://solidcommunity.net",
     redirectUrl: window.location.href,
@@ -41,11 +41,7 @@ async function handleRedirectAfterLogin() {
   await handleIncomingRedirect();
 
   if (session.info.isLoggedIn) {
-    //console.log(session.info.webId);
-    // await readProfile();
-    // await getMyPods();
-    // $('#podChoice').show();
-    console.log("LOGGED IN");
+    this.$store.dispatch("auth/setLoggedIn", true);
   }
 }
 handleRedirectAfterLogin();
@@ -54,7 +50,7 @@ handleRedirectAfterLogin();
 <template>
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
-    <button @click="loginToSelectedIdP()">Login</button>
+    <button @click="loginToProvider()">Login</button>
   </div>
 </template>
 
