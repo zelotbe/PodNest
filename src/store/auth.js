@@ -1,6 +1,3 @@
-import router from "../router";
-import store from "../store";
-
 export default {
   namespaced: true,
   state() {
@@ -19,10 +16,10 @@ export default {
     },
   },
   getters: {
-    getIsLoggedIn(state) {
+    loggedIn(state) {
       return state.isLoggedIn;
     },
-    getWebID(state) {
+    WebID(state) {
       return state.webID;
     },
     error(state) {
