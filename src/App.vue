@@ -47,6 +47,7 @@ export default {
       logout();
       window.localStorage.clear();
       this.$router.push("/");
+      this.$store.dispatch("auth/setLoggedIn", false);
     },
   },
   async mounted() {
