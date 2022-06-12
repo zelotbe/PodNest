@@ -123,6 +123,7 @@ export default {
         item = name.pathname;
         filesObject.push(item);
       }
+      filesObject.shift();
       commit("SET_FILES", filesObject);
     },
     setURL({ commit }, dir) {
