@@ -57,13 +57,16 @@ export default {
             <img class="w-20 mx-auto" src="folder.png" :alt="file" />
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-2"></div>
-              <p class="text-gray-700 text-base text-center">{{ file }}</p>
+              <p class="text-gray-700 text-base text-center">
+                {{ file.replace(currentURL, "") }}
+              </p>
             </div>
           </div>
           <div
             v-else-if="
               file.endsWith('.ico') ||
               file.endsWith('.jpg') ||
+              file.endsWith('.jpeg') ||
               file.endsWith('.png') ||
               file.endsWith('.gif')
             "
@@ -76,7 +79,9 @@ export default {
             />
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-2"></div>
-              <p class="text-gray-700 text-base text-center">{{ file }}</p>
+              <p class="text-gray-700 text-base text-center">
+                {{ file.replace(currentURL, "") }}
+              </p>
             </div>
           </div>
 
@@ -85,7 +90,9 @@ export default {
 
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-2"></div>
-              <p class="text-gray-700 text-base text-center">{{ file }}</p>
+              <p class="text-gray-700 text-base text-center">
+                {{ file.replace(currentURL, "") }}
+              </p>
             </div>
           </div>
         </div>
