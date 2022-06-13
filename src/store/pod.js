@@ -30,6 +30,9 @@ export default {
       files: {},
       baseURL: "",
       currentURL: "",
+      openedFile: false,
+      filecontent: "",
+      currentFile: "",
     };
   },
   mutations: {
@@ -48,6 +51,15 @@ export default {
     SET_BASEURL(state, value) {
       state.baseURL = value;
     },
+    SET_FILECONTENT(state, value) {
+      state.filecontent = value;
+    },
+    SET_OPENEDFILE(state, value) {
+      state.openedFile = value;
+    },
+    SET_CURRENTFILE(state, value) {
+      state.currentFile = value;
+    },
   },
   getters: {
     pods(state) {
@@ -64,6 +76,15 @@ export default {
     },
     baseURL(state) {
       return state.baseURL;
+    },
+    openedFile(state) {
+      return state.openedFile;
+    },
+    fileContent(state) {
+      return state.filecontent;
+    },
+    currentFile(state) {
+      return state.currentFile;
     },
   },
   actions: {
@@ -148,7 +169,8 @@ export default {
       await store.dispatch("pod/readProfile");
       await store.dispatch("pod/getData");
     },
-    async readFile({}, incomingFile) {
+    async readFile({ commit }, incomingFile) {
+      commit("SET_OPENEDFILE", true);
       const session = getDefaultSession();
       const fileURL = new URL(
         store.getters["auth/WebID"].replace(
@@ -161,19 +183,23 @@ export default {
       console.log(fileURL.href);
 
       try {
-        const file = await getFile(
-          fileURL.href, // File in Pod to Read
-          { fetch: fetch } // fetch from authenticated session
-        );
+        const file = await getFile(fileURL.href, { fetch: fetch });
 
         let t = file.text().then(function (text) {
           return text;
         });
         let text = (await t).toString();
+        commit("SET_FILECONTENT", text);
         console.log(text);
       } catch (err) {
         console.log(err);
       }
+    },
+    changeOpenedFile({ commit }, bool) {
+      commit("SET_OPENEDFILE", bool);
+    },
+    setCurrentfile({ commit }, file) {
+      commit("SET_CURRENTFILE", file);
     },
   },
 };
