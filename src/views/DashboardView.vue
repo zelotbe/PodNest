@@ -1,6 +1,11 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
+  data: function () {
+    return {
+      showModal: true,
+    };
+  },
   computed: {
     ...mapGetters({
       pods: "pod/pods",
@@ -15,9 +20,12 @@ export default {
       this.$store.dispatch("pod/setURL", dir);
       this.$store.dispatch("pod/getData");
     },
+    openFile(file) {
+      this.$store.dispatch("pod/readFile", file);
+    },
   },
-  mounted() {
-    this.$store.dispatch("pod/getAll");
+  async mounted() {
+    await this.$store.dispatch("pod/getAll");
   },
 };
 </script>
@@ -26,19 +34,19 @@ export default {
   <div class="" id="dashboard">
     <div>
       <h2>File viewer</h2>
-      <p class="w-44 mx-auto text-center" v-if="currentURL !== ''">
+      <p class="w-72 mx-auto text-center" v-if="currentURL !== ''">
         <span
           class="text-sky-600 underline font-bold cursor-pointer"
           @click="openDir(baseURL)"
-          >ROOT</span
+          >POD</span
         >{{ currentURL }}
       </p>
       <p
-        class="w-44 mx-auto text-center text-sky-600 underline font-bold cursor-pointer"
+        class="w-72 mx-auto text-center text-sky-600 underline font-bold cursor-pointer"
         @click="openDir(baseURL)"
         v-else
       >
-        ROOT
+        POD
       </p>
       <div class="container" v-if="pods.length > 1">
         <h3>Select a pod to manage.</h3>
@@ -85,7 +93,7 @@ export default {
             </div>
           </div>
 
-          <div v-else @click="openFile()">
+          <div v-else @click="openFile(file)">
             <img class="w-20 mx-auto" src="file.png" :alt="file" />
 
             <div class="px-6 py-4">
