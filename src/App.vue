@@ -3,7 +3,6 @@ import { mapGetters } from "vuex";
 import {
   handleIncomingRedirect,
   getDefaultSession,
-  logout,
 } from "@inrupt/solid-client-authn-browser";
 
 export default {
@@ -44,15 +43,13 @@ export default {
       }
     },
     logoutUser() {
-      logout();
-      window.localStorage.clear();
-      this.$router.push("/");
-      this.$store.dispatch("auth/setLoggedIn", false);
+      this.$store.dispatch("auth/logoutUser");
     },
   },
   async mounted() {
     async function handleRedirectAfterLogin() {
       await handleIncomingRedirect();
+      //await handleIncomingRedirect({ restorePreviousSession: true });
     }
     console.log("handling....");
     await handleRedirectAfterLogin();
