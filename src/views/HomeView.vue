@@ -1,5 +1,6 @@
 <script>
 import { login } from "@inrupt/solid-client-authn-browser";
+import { mapGetters } from "vuex";
 
 export default {
   methods: {
@@ -11,11 +12,17 @@ export default {
       });
     },
   },
+  computed: {
+    ...mapGetters({
+      error: "auth/error",
+    }),
+  },
 };
 </script>
 
 <template>
   <main>
     <button @click="loginToProvider()">Login</button>
+    <p>{{ error }}</p>
   </main>
 </template>
