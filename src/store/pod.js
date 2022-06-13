@@ -1,5 +1,4 @@
 import store from ".";
-import router from "../router";
 import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
 
 import {
@@ -11,6 +10,7 @@ import {
   getSolidDataset,
   getThing,
   getThingAll,
+  getFile,
   getStringNoLocale,
   getStringByLocaleAll,
   removeThing,
@@ -102,14 +102,18 @@ export default {
         )
       );
       profileURL.hash = "";
-      console.log(profileURL.href);
+
       let data;
       try {
         data = await getSolidDataset(profileURL.href, {
           fetch: session.fetch,
         });
       } catch (error) {
-        console.log("error");
+        store.dispatch(
+          "auth/setError",
+          "The session has expired, please login again."
+        );
+        store.dispatch("auth/logoutUser");
         return false;
       }
 
@@ -143,6 +147,33 @@ export default {
       await store.dispatch("pod/getPods");
       await store.dispatch("pod/readProfile");
       await store.dispatch("pod/getData");
+    },
+    async readFile({}, incomingFile) {
+      const session = getDefaultSession();
+      const fileURL = new URL(
+        store.getters["auth/WebID"].replace(
+          "/profile/card",
+          store.getters["pod/currentURL"]
+        )
+      );
+      fileURL.pathname += incomingFile.slice(1);
+      fileURL.hash = "";
+      console.log(fileURL.href);
+
+      try {
+        const file = await getFile(
+          fileURL.href, // File in Pod to Read
+          { fetch: fetch } // fetch from authenticated session
+        );
+
+        let t = file.text().then(function (text) {
+          return text;
+        });
+        let text = (await t).toString();
+        console.log(text);
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 };
