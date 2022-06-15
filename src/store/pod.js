@@ -1,6 +1,7 @@
 import store from ".";
 import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
 import getLastModifiedString from "../util/CalculateModifiedDate.js";
+import convertFileSize from "../util/FileSize.js";
 
 import {
   addUrl,
@@ -151,8 +152,8 @@ export default {
         let item = {};
         let name = new URL(files[i].url);
         let size = getInteger(files[i], POSIX.size);
+        size = convertFileSize(size);
         let modified = new Date(getDecimal(files[i], POSIX.mtime) * 1000);
-        console.log(getDecimal(files[i], POSIX.mtime));
         let modifiedString = getLastModifiedString(modified);
         item = { name: name.pathname, size: size, modified: modifiedString };
 
