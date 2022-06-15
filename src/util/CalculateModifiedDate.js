@@ -1,6 +1,5 @@
-export default function getLastModifiedString(modifiedDate) {
-  const currentDate = new Date();
-  const modifiedMS = currentDate - modifiedDate;
+export default function getLastModifiedString(modifiedDate) { 
+  const modifiedMS = new Date() - modifiedDate;
   const modifiedDays = Math.round(modifiedMS / (1000 * 60 * 24 * 60));
 
   let modifiedString;
