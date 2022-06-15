@@ -83,46 +83,58 @@ export default {
           v-for="file in files"
           :key="file"
         >
-          <div v-if="file.endsWith('/')" @click="openDir(file)">
-            <img class="w-20 mx-auto" src="@/assets/folder.png" :alt="file" />
+          <div v-if="file.name.endsWith('/')" @click="openDir(file.name)">
+            <img
+              class="w-20 mx-auto"
+              src="@/assets/folder.png"
+              :alt="file.name"
+            />
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-2"></div>
               <p class="text-gray-700 text-base text-center">
-                {{ file.replace(currentURL, "") }}
+                {{ file.name.replace(currentURL, "") }}
               </p>
+              <p>Last modified: {{ file.modified }}</p>
             </div>
           </div>
           <div
             v-else-if="
-              file.endsWith('.ico') ||
-              file.endsWith('.jpg') ||
-              file.endsWith('.jpeg') ||
-              file.endsWith('.png') ||
-              file.endsWith('.gif')
+              file.name.endsWith('.ico') ||
+              file.name.endsWith('.jpg') ||
+              file.name.endsWith('.jpeg') ||
+              file.name.endsWith('.png') ||
+              file.name.endsWith('.gif')
             "
             @click="openImage(file)"
           >
             <img
               class="w-20 mx-auto"
-              :src="pods[0].slice(0, -1) + file"
-              :alt="file"
+              :src="pods[0].slice(0, -1) + file.name"
+              :alt="file.name"
             />
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-2"></div>
               <p class="text-gray-700 text-base text-center">
-                {{ file.replace(currentURL, "") }}
+                {{ file.name.replace(currentURL, "") }}
               </p>
+
+              <p>Last modified: {{ file.modified }}</p>
             </div>
           </div>
 
-          <div v-else @click="openFile(file)">
-            <img class="w-20 mx-auto" src="@/assets/file.png" :alt="file" />
+          <div v-else @click="openFile(file.name)">
+            <img
+              class="w-20 mx-auto"
+              src="@/assets/file.png"
+              :alt="file.name"
+            />
 
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-2"></div>
               <p class="text-gray-700 text-base text-center">
-                {{ file.replace(currentURL, "") }}
+                {{ file.name.replace(currentURL, "") }}
               </p>
+              <p>Last modified: {{ file.modified }}</p>
             </div>
           </div>
         </div>
