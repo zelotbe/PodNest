@@ -1,16 +1,19 @@
-export default function getLastModifiedString(modifiedDate) { 
-  const modifiedMS = new Date() - modifiedDate;
-  const modifiedDays = Math.round(modifiedMS / (1000 * 60 * 24 * 60));
+export default function getLastModifiedString(modifiedDate) {
+    const modifiedMS = new Date() - modifiedDate;
+    const days = Math.round(modifiedMS / (1000 * 60 * 24 * 60));
 
-  let modifiedString;
-  if (modifiedDays >= 31) {
-    modifiedString = "More than a month";
-  } else if (modifiedDays < 31 && modifiedDays !== 1 && modifiedDays > 1) {
-    modifiedString = `${modifiedDays} days ago`;
-  } else if (modifiedDays === 1) {
-    modifiedString = "Yesterday";
-  } else {
-    modifiedString = "Today";
-  }
-  return modifiedString;
+    let message;
+    
+    if (days >= 31) {
+        message = "More than a month";
+    } else if (days < 31 && days !== 1 && days > 1) {
+        message = `${days} days ago`;
+    } else if (days === 1) {
+        message = "Yesterday";
+    } else if (days === 0) {
+        message = "Today";
+    } else {
+        message = "No data found";
+    }
+    return message;
 }
