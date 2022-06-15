@@ -1,5 +1,6 @@
 # PodNest
 
+## STATUS: WIP
 ## A Solid-pod browser
 
 PodNest is a schoolproject for the course 'Web Topics Advanced' at Odisee Ghent.  
