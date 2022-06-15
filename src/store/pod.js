@@ -1,22 +1,27 @@
 import store from ".";
 import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
+import getLastModifiedString from "../util/CalculateModifiedDate.js";
 
 import {
   addUrl,
   addStringNoLocale,
   createSolidDataset,
   createThing,
+  getInteger,
+  getDecimal,
   getPodUrlAll,
   getSolidDataset,
   getThing,
   getThingAll,
   getFile,
   getStringNoLocale,
+  getStringNoLocaleAll,
   getStringByLocaleAll,
   removeThing,
   saveSolidDatasetAt,
   setThing,
   getContainedResourceUrlAll,
+  getNamedNode,
 } from "@inrupt/solid-client";
 
 import { FOAF, RDF, AS, SCHEMA_INRUPT, POSIX } from "@inrupt/vocab-common-rdf";
@@ -139,13 +144,19 @@ export default {
       }
 
       let files = getThingAll(data);
+      console.log(files);
 
       let filesObject = [];
       for (let i = 0; i < files.length; i++) {
-        let item;
+        let item = {};
         let name = new URL(files[i].url);
+        let size = getInteger(files[i], POSIX.size);
+        let modified = new Date(getDecimal(files[i], POSIX.mtime) * 1000);
+        console.log(getDecimal(files[i], POSIX.mtime));
+        let modifiedString = getLastModifiedString(modified);
+        item = { name: name.pathname, size: size, modified: modifiedString };
 
-        item = name.pathname;
+        console.log(item);
         filesObject.push(item);
       }
       filesObject.shift();
